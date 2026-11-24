@@ -1,0 +1,78 @@
+{
+  "n_worlds": 12,
+  "n_days": 2400,
+  "summary": {
+    "linear": {
+      "logistic": {
+        "median_auc": 0.5709143183699856,
+        "median_brier": 0.24626837729168016,
+        "median_brier_improvement_vs_base": 0.003816220954291391,
+        "median_accuracy": 0.5521195274496178,
+        "median_always_up_accuracy": 0.5072967338429465
+      },
+      "mlp": {
+        "median_auc": 0.5628647099551563,
+        "median_brier": 0.2473633509629025,
+        "median_brier_improvement_vs_base": 0.002630537475734246,
+        "median_accuracy": 0.5462126476719944,
+        "median_always_up_accuracy": 0.5072967338429465
+      },
+      "mlp_minus_logistic_auc": {
+        "median": -0.007564270844503174,
+        "mlp_wins_fraction": 0.08333333333333333
+      },
+      "oracle": {
+        "median_auc": 0.5721566306481931,
+        "median_brier": 0.2458579484224675
+      }
+    },
+    "no_signal": {
+      "logistic": {
+        "median_auc": 0.4988312849251778,
+        "median_brier": 0.2501986079703819,
+        "median_brier_improvement_vs_base": -0.0001862112158423218,
+        "median_accuracy": 0.5093815149409312,
+        "median_always_up_accuracy": 0.5048644892286309
+      },
+      "mlp": {
+        "median_auc": 0.49752678110026766,
+        "median_brier": 0.25140702082266103,
+        "median_brier_improvement_vs_base": -0.0013257781372389837,
+        "median_accuracy": 0.5031271716469771,
+        "median_always_up_accuracy": 0.5048644892286309
+      },
+      "mlp_minus_logistic_auc": {
+        "median": -0.0050836048481372464,
+        "mlp_wins_fraction": 0.3333333333333333
+      },
+      "oracle": {
+        "median_auc": 0.5,
+        "median_brier": 0.24997758984697932
+      }
+    },
+    "nonlinear": {
+      "logistic": {
+        "median_auc": 0.5151344901024677,
+        "median_brier": 0.2499220386085116,
+        "median_brier_improvement_vs_base": 0.00029948709589973366,
+        "median_accuracy": 0.5006949270326615,
+        "median_always_up_accuracy": 0.5097289784572621
+      },
+      "mlp": {
+        "median_auc": 0.6488736834878909,
+        "median_brier": 0.23413455004096517,
+        "median_brier_improvement_vs_base": 0.015527321962123544,
+        "median_accuracy": 0.6108408617095205,
+        "median_always_up_accuracy": 0.5097289784572621
+      },
+      "mlp_minus_logistic_auc": {
+        "median": 0.12480074764917481,
+        "mlp_wins_fraction": 1.0
+      },
+      "oracle": {
+        "median_auc": 0.6597983458716727,
+        "median_brier": 0.23015407295197643
+      }
+    }
+  }
+}

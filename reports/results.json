@@ -1,0 +1,91 @@
+{
+  "model": "logistic",
+  "lags": 10,
+  "context_features": false,
+  "folds": [
+    {
+      "fold": 1,
+      "train_size": 995,
+      "test_size": 498,
+      "train_positive_rate": 0.4904522613065327,
+      "test_positive_rate": 0.46586345381526106,
+      "model": {
+        "accuracy": 0.5461847389558233,
+        "roc_auc": 0.5744587762509723,
+        "brier": 0.2461491276132077,
+        "log_loss": 0.6854114045805666,
+        "positive_rate": 0.46586345381526106
+      },
+      "historical_base_rate": {
+        "accuracy": 0.5341365461847389,
+        "roc_auc": 0.5,
+        "brier": 0.2494393056684199,
+        "log_loss": 0.6920256666501896,
+        "positive_rate": 0.46586345381526106
+      },
+      "always_up_accuracy": 0.46586345381526106
+    },
+    {
+      "fold": 2,
+      "train_size": 1493,
+      "test_size": 498,
+      "train_positive_rate": 0.4822505023442733,
+      "test_positive_rate": 0.5160642570281124,
+      "model": {
+        "accuracy": 0.5120481927710844,
+        "roc_auc": 0.5217882687246719,
+        "brier": 0.2512627551722223,
+        "log_loss": 0.6956722639865258,
+        "positive_rate": 0.5160642570281124
+      },
+      "historical_base_rate": {
+        "accuracy": 0.4839357429718876,
+        "roc_auc": 0.5,
+        "brier": 0.25088530965195355,
+        "log_loss": 0.6949186766633577,
+        "positive_rate": 0.5160642570281124
+      },
+      "always_up_accuracy": 0.5160642570281124
+    },
+    {
+      "fold": 3,
+      "train_size": 1991,
+      "test_size": 498,
+      "train_positive_rate": 0.49070818684078354,
+      "test_positive_rate": 0.5060240963855421,
+      "model": {
+        "accuracy": 0.4979919678714859,
+        "roc_auc": 0.5128403664989031,
+        "brier": 0.2520586684155046,
+        "log_loss": 0.6973254926682296,
+        "positive_rate": 0.5060240963855421
+      },
+      "historical_base_rate": {
+        "accuracy": 0.4939759036144578,
+        "roc_auc": 0.5,
+        "brier": 0.250198287347921,
+        "log_loss": 0.6935438108594598,
+        "positive_rate": 0.5060240963855421
+      },
+      "always_up_accuracy": 0.5060240963855421
+    }
+  ],
+  "pooled_oos": {
+    "model": {
+      "accuracy": 0.5187416331994645,
+      "roc_auc": 0.5329845709380203,
+      "brier": 0.24982351706697825,
+      "log_loss": 0.6928030537451073,
+      "positive_rate": 0.4959839357429719
+    },
+    "historical_base_rate": {
+      "accuracy": 0.5040160642570282,
+      "roc_auc": 0.4955374184772382,
+      "brier": 0.2501743008894315,
+      "log_loss": 0.6934960513910025,
+      "positive_rate": 0.4959839357429719
+    },
+    "always_up_accuracy": 0.4959839357429719
+  },
+  "note": "Historical base-rate probabilities use training labels only; always-up is a fixed directional benchmark."
+}
