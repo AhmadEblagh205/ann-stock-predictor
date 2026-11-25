@@ -4,66 +4,31 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A compact walk-forward laboratory for a deliberately difficult question: **when does a flexible neural network add information beyond market drift and a linear return model?**
+This project asks when a small neural network adds information beyond a linear model for next-day stock direction. It began as a next-day ANN predictor. I corrected a target-alignment bug and a baseline that used future labels, then added simulated markets where I choose whether the signal is absent, linear or nonlinear. It is an educational project, not a trading system, and I make no claim of a real-market edge.
 
-The project started as a next-day ANN predictor.  The audited version is intentionally more sceptical.  It fixes a one-return target-alignment bug, removes a future-aware “majority” benchmark, evaluates probability quality as well as accuracy, and adds repeated **known-truth synthetic worlds** where the data-generating signal can be switched off, made linear, or made nonlinear.
+## What it does
 
-This is an independent educational/statistical project.  It is **not** a live trading system and does not claim a real-market forecasting edge.
+- builds features from the previous ten daily returns, with optional trailing volatility and momentum;
+- evaluates logistic regression and a small MLP `(16, 8)` with expanding walk-forward folds;
+- reports accuracy, ROC-AUC, Brier score and log loss, against an always-up rule and a training-only base-rate forecast;
+- simulates three kinds of market: no signal, linear, and a nonlinear two-lag interaction;
+- optionally runs on a real ticker through `--ticker`.
 
-## Main findings
+## Results
 
-The repeated synthetic experiment uses 12 independent worlds per scenario, 2,400 trading days per world, three expanding walk-forward folds and two fixed model classes: logistic regression and a small MLP.
+The repeated experiment uses simulated data: 12 independent worlds per scenario, 2,400 trading days each, three walk-forward folds. The figures below are medians over the worlds.
 
-<!-- RESULTS_START -->
-Run `python src/robustness.py` to regenerate the numerical summary and figures.  The checked-in results are generated from the audited code.
-<!-- RESULTS_END -->
+| Scenario | Logistic AUC | MLP AUC | Oracle AUC |
+|---|---:|---:|---:|
+| No signal | 0.499 | 0.498 | 0.500 |
+| Linear | 0.571 | 0.563 | 0.572 |
+| Nonlinear | 0.515 | 0.649 | 0.660 |
 
-The interpretation matters more than a single accuracy number:
+With no signal both models sit at an AUC of 0.5, as they should. On the linear signal logistic regression does at least as well as the MLP, which beat it in 1 of 12 worlds. The MLP gains on the nonlinear signal, where it won in all 12 worlds and its median Brier score is 0.234 against 0.250 for logistic regression. None of this says anything about real markets.
 
-1. **No planted signal should look like no signal.**  The known-truth oracle has AUC 0.5, so any apparent neural-network “edge” is sampling noise.
-2. **A neural net does not deserve a win for a mostly linear signal.**  Logistic regression is the natural benchmark.
-3. **Extra flexibility becomes useful only when the DGP contains genuinely nonlinear structure and there is enough data to learn it.**
-4. **Accuracy is not enough.**  Every fold is also compared with a training-only historical base-rate probability forecast using Brier score and log loss.
+Full output is in `reports/robustness.json`, `reports/robustness_worlds.csv` and `reports/results.json`.
 
-The synthetic oracle `Phi(mu_t/sigma)` is evaluation-only and never appears in the model features.
-
-## Two audit corrections that materially changed the project
-
-### 1. One-return target gap
-
-Version 1 used the previous `L` returns but labelled each row with `r[t+1]`, unintentionally skipping `r[t]`.  V2 uses the intended one-step mapping:
-
-```text
-[r(t-L), ..., r(t-1)]  ->  sign(r(t))
-```
-
-A hand-constructed regression test now pins that alignment.
-
-### 2. Future-aware “majority baseline”
-
-Version 1 computed the majority class **inside each test fold** and called it an always-up/majority baseline.  That uses future test labels to decide which class the benchmark predicts.  V2 separates two honest comparators:
-
-- **always up**, fixed before seeing the fold;
-- **historical base-rate probability**, estimated from the training labels only.
-
-## Methods
-
-The CI-supported models are:
-
-- standardised logistic regression;
-- standardised scikit-learn MLP `(16, 8)`.
-
-Features are the previous ten daily returns.  An optional dense-feature mode also adds trailing volatility and momentum known before the target return.  The repository reports pooled walk-forward accuracy, ROC-AUC, Brier score and log loss.
-
-Three synthetic worlds provide known truth:
-
-- iid/no-signal;
-- linear AR-style predictability;
-- nonlinear two-lag interaction.
-
-See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for equations, target alignment, benchmark definitions.
-
-## Run
+## How to run
 
 ```bash
 pip install -r requirements.txt
@@ -72,31 +37,18 @@ pip install -r requirements.txt
 python src/train.py --synthetic --model mlp
 python src/train.py --synthetic --model logistic
 
-# Repeated known-truth study used in the README
+# Repeated simulated study
 python src/robustness.py
 
 # Optional exploratory market-data mode
 python src/train.py --ticker SPY --model mlp
+
+pytest -q
 ```
 
-TensorFlow is deliberately outside the core CI dependency set.  Install `requirements-tensorflow.txt` only if extending the project with Keras/LSTM experiments; those optional paths are not part of the audited headline results.
+## Notes
 
-## Tests
-
-`pytest` now checks:
-
-- exact lag/target alignment;
-- target-date alignment;
-- context-feature leakage guards;
-- contiguous expanding walk-forward splits;
-- training-only base-rate construction;
-- future-label independence of the baseline;
-- bounded model probabilities;
-- known-truth no-signal and nonlinear oracle behaviour.
-
-## What this project does **not** establish
-
-It does not establish profitable stock prediction, market efficiency/inefficiency, a production trading signal or a live neural-network strategy.  Real-market inference would need stronger data provenance, corporate-action handling, universe construction and multiple-testing controls.
+The target is `[r(t-L), ..., r(t-1)] -> sign(r(t))`, and a test pins that alignment. TensorFlow is not in the core dependencies, and `requirements-tensorflow.txt` is only for Keras or LSTM extensions that are not part of these results. Equations, benchmark definitions, the two corrections and the interpretation are in docs/METHODOLOGY.md.
 
 ## Licence
 

@@ -71,3 +71,13 @@ The key falsification logic is:
 - no probability calibration study;
 - synthetic returns are intentionally simplified;
 - optional TensorFlow sequence models are not part of CI-supported headline results.
+
+## Notes moved from the README
+
+Two corrections changed the project. First, version 1 labelled each row of the previous L returns with r[t+1], which skipped r[t]. Version 2 maps [r(t-L), ..., r(t-1)] to sign(r(t)), and a hand-constructed regression test pins the alignment. Second, version 1 computed the majority class inside each test fold and called it a baseline, which uses the future test labels. Version 2 uses two comparators: always up, fixed before seeing the fold, and a historical base-rate probability estimated from the training labels only.
+
+Interpretation of the synthetic experiment: with no planted signal the oracle AUC is 0.5, so any apparent neural-network edge is sampling noise. A neural network should not be expected to beat logistic regression on a mostly linear signal. Extra flexibility helps only when the data-generating process has nonlinear structure and there is enough data to learn it. Every fold is also compared with the training-only base-rate forecast using Brier score and log loss. The oracle Phi(mu_t/sigma) is used for evaluation only and never appears in the model features.
+
+The tests cover lag and target alignment, context-feature leakage guards, contiguous expanding walk-forward splits, training-only base-rate construction, independence of the baseline from future labels, bounded probabilities, and the no-signal and nonlinear oracle behaviour.
+
+TensorFlow is outside the core CI dependency set. requirements-tensorflow.txt is only for optional Keras/LSTM extensions, which are not part of the headline results. Real-market inference would need better data provenance, corporate-action handling, universe construction and multiple-testing controls.
